@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="static/logo.svg" alt="Kimu" width="120" height="120">
+  <img src="src/kimu/static/logo.svg" alt="Kimu" width="120" height="120">
 </p>
 
 <h1 align="center">Kimu</h1>
