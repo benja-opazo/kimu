@@ -9,7 +9,7 @@
 ---
 
 > [!IMPORTANT]
-> **Disclaimer:** _This is an internal tooling that I am sharing with you. It was more or less vibecoded, if you don't like that, please refrain from commenting. If you have any issues or sueggestions, feel free to report them._
+> **Disclaimer:** _This is internal tooling that I am sharing with you. It was more or less vibecoded; if you don't like that, please refrain from commenting. If you have any issues or suggestions, feel free to report them._
 
 ---
 
