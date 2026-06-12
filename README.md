@@ -27,6 +27,7 @@ Kimu serves a folder of `.md` files as a fast, single-page reader and scoped edi
 - **Admonitions** — GitHub-style `> [!NOTE]` / `[!TIP]` / `[!WARNING]` callouts
 - **7 themes** — Light, Dark, Ayu Light/Dark, Dracula, Alucard, Synthwave
 - **Reading settings** (font, size, width), resizable sidebar
+- **Fully offline** — JS and fonts are bundled, no CDN or internet needed
 - **Easy to install**, no dependencies.
 
 ## Install

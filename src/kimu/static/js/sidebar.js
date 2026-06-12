@@ -72,7 +72,7 @@ function renderNode(node, parentEl, depth, prefix) {
     arrow.textContent = '▶';
     header.className   = 'dir-header';
     header.dataset.dir = dirPath;
-    header.style.paddingLeft = (12 + depth * 14) + 'px';
+    header.style.paddingLeft = (8 + depth * 16) + 'px';
     header.append(arrow, `${name}/`);
     list.className     = 'dir-files';
     list.dataset.dir   = dirPath;
@@ -90,7 +90,8 @@ function renderNode(node, parentEl, depth, prefix) {
 
   for (const f of node.files.sort((a, b) => a.name.localeCompare(b.name))) {
     const el = fileEl(f.path, f.name.replace(/\.md$/, ''));
-    el.style.paddingLeft = (depth === 0 ? 16 : 30 + (depth - 1) * 14) + 'px';
+    // Align a file's name under its sibling folders' names (+ the chevron gutter).
+    el.style.paddingLeft = (26 + depth * 16) + 'px';
     parentEl.append(el);
   }
 }

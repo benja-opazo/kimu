@@ -194,23 +194,26 @@ body.resizing #sidebar { transition: none; }
   flex-shrink: 0;
 }
 
-#tree { overflow-y: auto; flex: 1; padding: 6px 0 20px; }
+#tree { overflow-y: auto; flex: 1; padding: 8px 0 24px; }
 
 /* ── File tree ──────────────────────────────────────────────────── */
 .dir-header {
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 6px 14px;
-  font-size: 13px;
+  gap: 8px;
+  padding: 7px 14px;
+  font-size: 14px;
+  line-height: 1.4;
   font-weight: 600;
   color: var(--sb-text);
   cursor: pointer;
   user-select: none;
-  transition: color .15s;
+  border-radius: 6px;
+  margin: 1px 6px;
+  transition: background .1s, color .15s;
 }
-.dir-header:hover { color: var(--sb-text); }
-.dir-arrow { font-size: 8px; transition: transform .2s; }
+.dir-header:hover { background: var(--sb-hover); }
+.dir-arrow { font-size: 10px; width: 10px; opacity: .7; transition: transform .2s; }
 .dir-header.open .dir-arrow { transform: rotate(90deg); }
 .dir-files { display: none; }
 .dir-files.open { display: block; }
@@ -218,20 +221,22 @@ body.resizing #sidebar { transition: none; }
 .file-item {
   position: relative;
   display: block;
-  padding: 5.5px 14px 5.5px 30px;
-  font-size: 13px;
+  padding: 6.5px 14px;
+  font-size: 14px;
+  line-height: 1.4;
   color: var(--sb-file);
   cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   text-decoration: none;
+  border-radius: 6px;
+  margin: 1px 6px;
   border-left: 2px solid transparent;
   transition: background .1s, color .1s;
 }
 .file-item:hover  { background: var(--sb-hover); color: var(--sb-text); }
 .file-item.active { background: var(--sb-active); color: var(--sb-active-text); border-left-color: var(--primary); }
-.file-item.root   { padding-left: 16px; }
 
 /* Active-doc TOC collapse caret */
 .file-item.has-toc { padding-right: 22px; }
@@ -517,7 +522,7 @@ body.resizing #sidebar { transition: none; }
 
 /* Code */
 #doc code {
-  font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  font-family: 'Fira Code', ui-monospace, 'JetBrains Mono', monospace;
   font-size: .85em;
   background: var(--code-bg);
   color: var(--code-text);
@@ -623,20 +628,21 @@ body.resizing #sidebar { transition: none; }
 .toc-item {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 11.5px;
+  gap: 5px;
+  font-size: 12.5px;
+  line-height: 1.4;
   cursor: pointer;
   user-select: none;
   transition: background .1s, color .1s;
   color: var(--sb-file);
-  padding: 2px 8px 2px 22px;
+  padding: 3.5px 8px 3.5px 26px;
 }
 .toc-item:hover { background: var(--sb-hover); color: var(--sb-text); }
 .toc-item.active { color: var(--primary); font-weight: 600; }
 
-.toc-item.h1 { padding-left: 22px; font-weight: 600; color: var(--sb-text); }
-.toc-item.h2 { padding-left: 32px; }
-.toc-item.h3 { padding-left: 42px; font-size: 10.5px; }
+.toc-item.h1 { padding-left: 26px; font-weight: 600; color: var(--sb-text); }
+.toc-item.h2 { padding-left: 38px; }
+.toc-item.h3 { padding-left: 50px; font-size: 12px; }
 
 .toc-arrow { font-size: 7px; flex-shrink: 0; transition: transform .2s; opacity: .45; }
 .toc-item.toc-open .toc-arrow { transform: rotate(90deg); }
@@ -781,3 +787,61 @@ body.resizing #sidebar { transition: none; }
   z-index: 400;
 }
 #stopped[hidden] { display: none; }
+
+/* ── Modal dialog ───────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(2px);
+  animation: modal-fade .12s ease;
+}
+.modal-overlay[hidden] { display: none; }
+@keyframes modal-fade { from { opacity: 0; } to { opacity: 1; } }
+
+.modal {
+  width: 100%;
+  max-width: 380px;
+  padding: 22px 24px 20px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.4);
+  animation: modal-pop .14s cubic-bezier(.2,.8,.3,1);
+}
+@keyframes modal-pop { from { transform: scale(.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal h2 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+.modal p { color: var(--muted); font-size: 14px; line-height: 1.55; margin-bottom: 20px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+.btn-ghost {
+  font: inherit; font-size: 13.5px; font-weight: 500;
+  padding: 8px 16px;
+  color: var(--text);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .12s, border-color .12s;
+}
+.btn-ghost:hover { background: var(--sb-hover); border-color: var(--muted); }
+.btn-danger {
+  font: inherit; font-size: 13.5px; font-weight: 600;
+  padding: 8px 18px;
+  color: #fff;
+  background: #e5534b;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: filter .12s, box-shadow .12s;
+  box-shadow: 0 3px 12px rgba(229,83,75,.35);
+}
+.btn-danger:hover { filter: brightness(1.06); box-shadow: 0 5px 16px rgba(229,83,75,.45); }
+.btn-danger:active { transform: translateY(1px); }
+.btn-danger:focus-visible { outline: 2px solid #fff; outline-offset: -4px; }

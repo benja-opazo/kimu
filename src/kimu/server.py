@@ -85,6 +85,7 @@ CONTENT_TYPES = {
     ".jpeg": "image/jpeg",
     ".gif": "image/gif",
     ".webp": "image/webp",
+    ".woff2": "font/woff2",
 }
 SEARCH_LIMIT = 200
 

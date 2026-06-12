@@ -55,6 +55,21 @@ Converting a dead PC's ATX unit into a variable bench supply.
 [ESP32](components.md#inventory) + capacitive moisture probe, reports to my phone
 over WiFi. Deep-sleeps between readings so a battery lasts weeks.
 
+The deep-sleep loop, roughly:
+
+```cpp
+// wake -> read -> publish -> sleep again
+void loop() {
+  int raw = analogRead(PROBE);
+  float pct = (raw <= DRY) ? 0.0 : map(raw, DRY, WET, 0, 100) / 100.0;
+  if (pct >= 0.0 && pct != lastPct) {
+    publish(pct);          // => MQTT over WiFi
+    lastPct = pct;
+  }
+  esp_deep_sleep(30 * 60 * 1000000ULL);   // 30 min
+}
+```
+
 Lessons learned:
 
 1. **Capacitive** probes, not the resistive forks — the forks corrode in days

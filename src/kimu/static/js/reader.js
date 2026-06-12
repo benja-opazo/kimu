@@ -28,7 +28,12 @@ export function initReader() {
   });
 
   const panel = $('font-panel'), btn = $('font-btn');
-  btn.addEventListener('click', e => { e.stopPropagation(); panel.hidden = !panel.hidden; });
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const open = panel.hidden;
+    document.querySelectorAll('.popover').forEach(p => p.hidden = true);  // close siblings
+    panel.hidden = !open;
+  });
   document.addEventListener('click', e => {
     if (!panel.hidden && !panel.contains(e.target) && e.target !== btn) panel.hidden = true;
   });

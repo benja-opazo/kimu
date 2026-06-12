@@ -5,10 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kimu</title>
 <link rel="icon" type="image/svg+xml" href="/static/logo.svg">
-<script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="/static/vendor/marked.min.js"></script>
+<link rel="stylesheet" href="/static/fonts/fonts.css">
 <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
@@ -43,18 +41,18 @@
       <button id="quit-btn" title="Quit Kimu (stops the server)">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" x2="12" y1="2" y2="12"/></svg>
       </button>
-      <div id="font-panel" hidden>
+      <div id="font-panel" class="popover" hidden>
         <label>Font
           <select id="font-family">
             <option value="'Inter', system-ui, -apple-system, sans-serif">Sans</option>
             <option value="Georgia, 'Times New Roman', serif">Serif</option>
-            <option value="'JetBrains Mono', 'Fira Code', ui-monospace, monospace">Mono</option>
+            <option value="'Fira Code', ui-monospace, monospace">Mono</option>
           </select>
         </label>
         <label>Size <input id="font-size" type="range" min="13" max="20" step="1"></label>
         <label>Width <input id="doc-width" type="range" min="40" max="95" step="1"></label>
       </div>
-      <div id="theme-panel" hidden>
+      <div id="theme-panel" class="popover" hidden>
         <button class="theme-opt" data-theme="light"><span class="theme-swatch" style="background:linear-gradient(135deg,#ffffff 50%,#6366f1 50%)"></span>Light</button>
         <button class="theme-opt" data-theme="dark"><span class="theme-swatch" style="background:linear-gradient(135deg,#1a1b26 50%,#818cf8 50%)"></span>Dark</button>
         <button class="theme-opt" data-theme="ayu-light"><span class="theme-swatch" style="background:linear-gradient(135deg,#fcfcfc 50%,#ff9940 50%)"></span>Ayu Light</button>
@@ -87,6 +85,17 @@
     <img src="/static/logo.svg" alt="Kimu" width="96" height="96">
     <h1>Kimu stopped</h1>
     <p>The server has shut down. You can close this window.</p>
+  </div>
+</div>
+
+<div id="confirm-quit" class="modal-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirm-quit-title">
+    <h2 id="confirm-quit-title">Stop Kimu?</h2>
+    <p>This shuts down the server. Any open Kimu tabs will stop working.</p>
+    <div class="modal-actions">
+      <button id="quit-cancel" class="btn-ghost">Cancel</button>
+      <button id="quit-confirm" class="btn-danger">Quit</button>
+    </div>
   </div>
 </div>
 

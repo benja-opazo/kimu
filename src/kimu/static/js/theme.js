@@ -25,7 +25,12 @@ export function initTheme() {
     opt.addEventListener('click', () => { apply(opt.dataset.theme); panel.hidden = true; })
   );
 
-  btn.addEventListener('click', e => { e.stopPropagation(); panel.hidden = !panel.hidden; });
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const open = panel.hidden;
+    document.querySelectorAll('.popover').forEach(p => p.hidden = true);  // close siblings
+    panel.hidden = !open;
+  });
   document.addEventListener('click', e => {
     if (!panel.hidden && !panel.contains(e.target) && !btn.contains(e.target)) panel.hidden = true;
   });
