@@ -4,7 +4,8 @@ Kimu — tiny local markdown doc viewer.
 Usage:  kimu [folder] [-p PORT]   (folder default ".", port default 8765)
 Opens:  http://localhost:8765
 
-Serves the SPA shell (index.html), static assets (static/), and a small JSON API:
+Serves the SPA shell (index.html), static assets (static/), doc-folder media
+(/asset/<path> — images alongside the docs), and a small JSON API:
   GET  /api/config            -> {"name": "Kimu", "folder": <basename>}
   GET  /api/files             -> list of doc paths (relative to folder)
   GET  /api/file?path=...     -> raw markdown
@@ -15,7 +16,7 @@ Serves the SPA shell (index.html), static assets (static/), and a small JSON API
 import argparse, json, os, shutil, socket, subprocess, sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
 
 class HTTPServerQuiet(ThreadingHTTPServer):
@@ -79,6 +80,11 @@ CONTENT_TYPES = {
     ".js": "text/javascript; charset=utf-8",
     ".json": "application/json; charset=utf-8",
     ".svg": "image/svg+xml",
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".gif": "image/gif",
+    ".webp": "image/webp",
 }
 SEARCH_LIMIT = 200
 
@@ -100,6 +106,21 @@ def safe(rel: str) -> Path | None:
         p = (DOCS / rel).resolve()
         p.relative_to(DOCS)                    # raises if outside docs/
         return p if p.suffix == ".md" and p.is_file() else None
+    except Exception:
+        return None
+
+
+def asset(rel: str) -> Path | None:
+    """Resolve rel under DOCS; return Path for any existing non-markdown file.
+
+    Lets docs reference local images (and other media) sitting alongside them.
+    """
+    if DOCS is None:
+        return None
+    try:
+        p = (DOCS / rel).resolve()
+        p.relative_to(DOCS)                    # raises if outside docs/
+        return p if p.is_file() and p.suffix.lower() != ".md" else None
     except Exception:
         return None
 
@@ -159,6 +180,12 @@ class Handler(BaseHTTPRequestHandler):
             p = static_file(u.path[len("/static/"):])
             if p:
                 self._file(p, CONTENT_TYPES.get(p.suffix, "application/octet-stream"))
+            else:
+                self.send_error(404)
+        elif u.path.startswith("/asset/"):
+            p = asset(unquote(u.path[len("/asset/"):]))
+            if p:
+                self._file(p, CONTENT_TYPES.get(p.suffix.lower(), "application/octet-stream"))
             else:
                 self.send_error(404)
         elif u.path == "/api/config":

@@ -39,7 +39,7 @@
       <button id="font-btn" title="Reading settings">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></svg>
       </button>
-      <button id="theme-btn" title="Toggle theme"></button>
+      <button id="theme-btn" title="Theme"></button>
       <button id="quit-btn" title="Quit Kimu (stops the server)">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" x2="12" y1="2" y2="12"/></svg>
       </button>
@@ -53,6 +53,15 @@
         </label>
         <label>Size <input id="font-size" type="range" min="13" max="20" step="1"></label>
         <label>Width <input id="doc-width" type="range" min="40" max="95" step="1"></label>
+      </div>
+      <div id="theme-panel" hidden>
+        <button class="theme-opt" data-theme="light"><span class="theme-swatch" style="background:linear-gradient(135deg,#ffffff 50%,#6366f1 50%)"></span>Light</button>
+        <button class="theme-opt" data-theme="dark"><span class="theme-swatch" style="background:linear-gradient(135deg,#1a1b26 50%,#818cf8 50%)"></span>Dark</button>
+        <button class="theme-opt" data-theme="ayu-light"><span class="theme-swatch" style="background:linear-gradient(135deg,#fcfcfc 50%,#ff9940 50%)"></span>Ayu Light</button>
+        <button class="theme-opt" data-theme="ayu-dark"><span class="theme-swatch" style="background:linear-gradient(135deg,#0d1017 50%,#ffb454 50%)"></span>Ayu Dark</button>
+        <button class="theme-opt" data-theme="alucard"><span class="theme-swatch" style="background:linear-gradient(135deg,#fffbeb 50%,#644ac9 50%)"></span>Alucard (Dracula Light)</button>
+        <button class="theme-opt" data-theme="dracula"><span class="theme-swatch" style="background:linear-gradient(135deg,#282a36 50%,#bd93f9 50%)"></span>Dracula</button>
+        <button class="theme-opt" data-theme="synthwave"><span class="theme-swatch" style="background:linear-gradient(135deg,#262335 50%,#ff7edb 50%)"></span>Synthwave</button>
       </div>
     </div>
     <div id="tabs" hidden></div>

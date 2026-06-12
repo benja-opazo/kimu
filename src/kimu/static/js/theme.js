@@ -1,14 +1,39 @@
 import { $ } from './dom.js';
-import { moon, sun } from './icons.js';
+import { palette } from './icons.js';
+
+// data-theme on <html> drives every theme (see styles.css). 'light' is the
+// :root default. Order here is the order shown in the picker.
+const THEMES = [
+  { id: 'light',     label: 'Light' },
+  { id: 'dark',      label: 'Dark' },
+  { id: 'ayu-light', label: 'Ayu Light' },
+  { id: 'ayu-dark',  label: 'Ayu Dark' },
+  { id: 'alucard',   label: 'Alucard (Dracula Light)' },
+  { id: 'dracula',   label: 'Dracula' },
+  { id: 'synthwave', label: 'Synthwave' },
+];
+const IDS = THEMES.map(t => t.id);
 
 export function initTheme() {
-  const dark = localStorage.getItem('docs-theme') === 'dark';
-  if (dark) document.documentElement.classList.add('dark');
-  $('theme-btn').innerHTML = dark ? sun : moon;
+  let saved = localStorage.getItem('docs-theme') || 'light';
+  if (!IDS.includes(saved)) saved = 'light';   // tolerate legacy/unknown values
+  apply(saved);
 
-  $('theme-btn').addEventListener('click', () => {
-    const isDark = document.documentElement.classList.toggle('dark');
-    $('theme-btn').innerHTML = isDark ? sun : moon;
-    localStorage.setItem('docs-theme', isDark ? 'dark' : 'light');
+  $('theme-btn').innerHTML = palette;
+  const panel = $('theme-panel'), btn = $('theme-btn');
+  panel.querySelectorAll('.theme-opt').forEach(opt =>
+    opt.addEventListener('click', () => { apply(opt.dataset.theme); panel.hidden = true; })
+  );
+
+  btn.addEventListener('click', e => { e.stopPropagation(); panel.hidden = !panel.hidden; });
+  document.addEventListener('click', e => {
+    if (!panel.hidden && !panel.contains(e.target) && !btn.contains(e.target)) panel.hidden = true;
   });
+}
+
+function apply(id) {
+  document.documentElement.dataset.theme = id;
+  localStorage.setItem('docs-theme', id);
+  document.querySelectorAll('.theme-opt').forEach(o =>
+    o.classList.toggle('selected', o.dataset.theme === id));
 }

@@ -23,7 +23,10 @@ Kimu serves a folder of `.md` files as a fast, single-page reader and scoped edi
 - **Inline editing** — toggle checkboxes and edit tables. Changes save instantly.
 - **Auto table of contents** with scroll-spy, per-document
 - **Deep links** to any heading, and working internal links between docs
-- **Reading settings** (font, size, width), light/dark theme, resizable sidebar
+- **Local images** — `![](img/photo.jpg)` next to your docs renders inline
+- **Admonitions** — GitHub-style `> [!NOTE]` / `[!TIP]` / `[!WARNING]` callouts
+- **7 themes** — Light, Dark, Ayu Light/Dark, Dracula, Alucard, Synthwave
+- **Reading settings** (font, size, width), resizable sidebar
 - **Easy to install**, no dependencies.
 
 ## Install

@@ -2,6 +2,12 @@ import { $, slugify } from './dom.js';
 import { navigate } from './store.js';
 import { saveFile } from './api.js';
 import { scrollToId } from './toc.js';
+import { admonitionIcons } from './icons.js';
+
+const ADMONITION_LABELS = {
+  note: 'Note', tip: 'Tip', important: 'Important',
+  warning: 'Warning', caution: 'Caution',
+};
 
 // All rendering is scoped to a buffer (the document data) and a root element
 // (the #doc container it renders into), so multiple panes can coexist.
@@ -15,6 +21,7 @@ export function renderDoc(buf, root) {
 
   root.innerHTML = marked.parse(buf.raw);
 
+  renderAdmonitions(root);
   assignHeadingIds(root);
   addHeadingAnchors(buf, root);
   wireCheckboxes(buf, root);
@@ -23,6 +30,7 @@ export function renderDoc(buf, root) {
   mapTablesToLines(buf, root);
   makeTablesEditable(buf, root);
   wireInternalLinks(buf, root);
+  rewriteImages(buf, root);
 }
 
 async function save(buf) {
@@ -219,6 +227,42 @@ function resolveRelative(href, fromPath) {
     else base.push(part);
   }
   return { path: base.join('/'), heading };
+}
+
+// GitHub-style alerts: a blockquote whose first paragraph opens with [!TYPE]
+// becomes a styled callout with an icon + title.
+function renderAdmonitions(root) {
+  root.querySelectorAll('blockquote').forEach(bq => {
+    const first = bq.querySelector('p');
+    if (!first) return;
+    const m = first.textContent.match(/^\s*\[!(\w+)\]/);
+    if (!m) return;
+    const type = m[1].toLowerCase();
+    const label = ADMONITION_LABELS[type];
+    if (!label) return;
+
+    // Drop the "[!TYPE]" marker (and any trailing line break) from the body.
+    first.innerHTML = first.innerHTML.replace(/^\s*\[!\w+\]\s*(<br\s*\/?>)?\s*/i, '');
+    if (!first.textContent.trim() && !first.querySelector('img')) first.remove();
+
+    bq.classList.add('admonition', `admonition-${type}`);
+    const title = document.createElement('div');
+    title.className = 'admonition-title';
+    title.innerHTML = `${admonitionIcons[type]}<span>${label}</span>`;
+    bq.prepend(title);
+  });
+}
+
+// Relative <img> srcs point at files alongside the doc. Rewrite them to the
+// server's /asset/ route, resolved relative to the current doc (like links).
+// Absolute URLs (http:, data:, root-relative /) are left untouched.
+function rewriteImages(buf, root) {
+  root.querySelectorAll('img').forEach(img => {
+    const src = img.getAttribute('src') || '';
+    if (!src || /^[a-z]+:/i.test(src) || src.startsWith('/')) return;
+    const { path } = resolveRelative(src, buf.path);
+    img.src = '/asset/' + path.split('/').map(encodeURIComponent).join('/');
+  });
 }
 
 function wireInternalLinks(buf, root) {
