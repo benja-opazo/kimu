@@ -14,3 +14,8 @@ export const search = q =>
 
 export const getConfig = () =>
   fetch('/api/config').then(r => r.json());
+
+// Tell the server to shut down. The connection drops as it exits, so we ignore
+// any network error — that's the success signal, not a failure.
+export const quit = () =>
+  fetch('/api/quit', { method: 'POST' }).catch(() => {});

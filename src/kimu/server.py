@@ -10,6 +10,7 @@ Serves the SPA shell (index.html), static assets (static/), and a small JSON API
   GET  /api/file?path=...     -> raw markdown
   POST /api/file?path=...     -> overwrite markdown
   GET  /api/search?q=...      -> [{path, line, text}] case-insensitive content matches
+  POST /api/quit              -> shut the server down (process exits)
 """
 import argparse, json, os, shutil, socket, subprocess, sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -180,6 +181,12 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         global DOCS
         u = urlparse(self.path)
+        if u.path == "/api/quit":
+            self._json({"ok": True})
+            # shutdown() must run off the serve_forever thread, so spawn one.
+            import threading
+            threading.Thread(target=self.server.shutdown, daemon=True).start()
+            return
         if u.path == "/api/pick-folder":
             path, err = pick_folder_dialog()
             if err:
@@ -245,7 +252,7 @@ def main():
     parser.add_argument("--no-browser", action="store_true",
                         help="don't open a browser window on start")
     parser.add_argument("--install-launcher", action="store_true",
-                        help="add Kimu to the desktop app menu (Linux) and exit")
+                        help="add Kimu to the OS app list (Linux/macOS/Windows) and exit")
     args = parser.parse_args()
 
     if args.install_launcher:
@@ -270,9 +277,12 @@ def main():
         threading.Timer(0.5, lambda: webbrowser.open(url)).start()
 
     try:
-        httpd.serve_forever()
+        httpd.serve_forever()      # returns when /api/quit calls shutdown()
     except KeyboardInterrupt:
         pass
+    finally:
+        httpd.server_close()
+    print("kimu: stopped.")
 
 
 if __name__ == "__main__":

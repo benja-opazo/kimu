@@ -40,6 +40,9 @@
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></svg>
       </button>
       <button id="theme-btn" title="Toggle theme"></button>
+      <button id="quit-btn" title="Quit Kimu (stops the server)">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" x2="12" y1="2" y2="12"/></svg>
+      </button>
       <div id="font-panel" hidden>
         <label>Font
           <select id="font-family">
@@ -66,6 +69,15 @@
     <p>Open a folder of Markdown docs to get started.</p>
     <button id="landing-open" class="btn-primary">Select folder…</button>
     <p id="landing-err" class="landing-err" hidden></p>
+    <button id="landing-quit" class="btn-quit">Quit Kimu</button>
+  </div>
+</div>
+
+<div id="stopped" hidden>
+  <div class="landing-card">
+    <img src="/static/logo.svg" alt="Kimu" width="96" height="96">
+    <h1>Kimu stopped</h1>
+    <p>The server has shut down. You can close this window.</p>
   </div>
 </div>
 

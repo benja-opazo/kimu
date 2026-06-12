@@ -78,14 +78,23 @@ another. No separate app window, no dependencies.
 uv run kimu ./docs           # or: uv run python -m kimu ./docs
 ```
 
-## Add to the application menu (Linux)
+## Add to the application list
 
 ```bash
 kimu --install-launcher
 ```
 
-Kimu then appears in the app menu with its icon (launches with no folder → the
-landing screen). User-level, no sudo. On macOS/Windows, just run `kimu`.
+Kimu then appears in your OS's app list with its icon, launching with no folder
+→ the landing screen, where you pick a folder. User-level — no sudo/admin. Works
+on all three platforms:
+
+- **Linux** — a `.desktop` entry in `~/.local/share/applications` (shows in the
+  app menu).
+- **macOS** — a `Kimu.app` bundle in `~/Applications` (shows in Launchpad and
+  Spotlight).
+- **Windows** — a `Kimu.lnk` shortcut in the Start Menu.
+
+Re-run the command after updating Kimu if its install path changes.
 
 > The native folder dialog uses your OS tools: `osascript` (macOS) and
 > `powershell` (Windows) are built in; on Linux it needs `zenity` or `kdialog`

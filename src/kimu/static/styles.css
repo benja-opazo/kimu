@@ -635,3 +635,28 @@ body.resizing #sidebar { transition: none; }
 
 .landing-err { color: #c0392b; font-size: 12.5px; max-width: 320px; }
 .landing-err[hidden] { display: none; }
+
+.btn-quit {
+  margin-top: 4px;
+  padding: 6px 14px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--muted);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color .12s, border-color .12s;
+}
+.btn-quit:hover { color: var(--text); border-color: var(--muted); }
+
+#stopped {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  z-index: 400;
+}
+#stopped[hidden] { display: none; }
