@@ -4,43 +4,61 @@
 
 <h1 align="center">Kimu</h1>
 
-<p align="center">A tiny local viewer for a folder of Markdown docs.</p>
+<p align="center">A tiny local Markdown viewer</p>
 
 ---
 
 > [!IMPORTANT]
 > **Disclaimer:** _This is internal tooling that I am sharing with you. It was more or less vibecoded; if you don't like that, please refrain from commenting. If you have any issues or suggestions, feel free to report them._
 
----
-
 ## What it does
 
 Kimu serves a folder of `.md` files as a fast, single-page reader and scoped editor (edit tables, checkboxes). It features:
 
-- **File tree** sidebar with collapsible folders
-- **Tabs** — open multiple docs at once; click to switch, `×` or middle-click to close
-- **Full-text search** across all docs (`/` to open)
-- **Inline editing** — toggle checkboxes and edit tables. Changes save instantly.
-- **Auto table of contents** with scroll-spy, per-document
+- **File tree** sidebar with collapsible folders and navigation
 - **Deep links** to any heading, and working internal links between docs
-- **Local images** — `![](img/photo.jpg)` next to your docs renders inline
-- **Admonitions** — GitHub-style `> [!NOTE]` / `[!TIP]` / `[!WARNING]` callouts
-- **7 themes** — Light, Dark, Ayu Light/Dark, Dracula, Alucard, Synthwave
-- **Reading settings** (font, size, width), resizable sidebar
-- **Fully offline** — JS and fonts are bundled, no CDN or internet needed
+- **Auto table of contents** with scroll-spy, per-document
+- **Local images**:`![](img/photo.jpg)` next to your docs renders inline
+
+![UI](imgs/ui.gif)
+
+- **Tabs**: open multiple docs at once, remembers the position.
+
+![Tabs](imgs/tabs.gif)
+
+- **Inline editing**: toggle checkboxes and edit tables. Changes save instantly.
+
+![Edit](imgs/edit.gif)
+
+- **Adjustable Layout** (font, size, width), resizable sidebar
+
+![Layout](imgs/layout.gif)
+
+- **7 themes**: Light, Dark, Ayu Light/Dark, Dracula, Alucard, Synthwave
+
+![Themes](imgs/themes.gif)
+
+And more!
+- **Full-text search** across all docs (`/` to open)
+- **Admonitions**: Add admonitions with `> [!NOTE]` / `[!TIP]` / `[!WARNING]`
 - **Easy to install**, no dependencies.
+- **Fully offline**: JS and fonts are bundled, no CDN or internet needed
 
 ## Install
 
+### Prerequisites
+
 Kimu can be installed as a `kimu` command to `~/.local/bin` with [uv](https://docs.astral.sh/uv/). I
 
-**1. Install uv** (if you don't have it):
+**Install uv** 
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-**2. Get the code and install:**
+### Kimu Installation
+
+**Get the code and install**
 
 ```bash
 git clone https://github.com/benja-opazo/kimu
@@ -48,7 +66,7 @@ cd kimu
 uv tool install .
 ```
 
-**3. Make sure `~/.local/bin` is on your PATH.** If `kimu` isn't found after install:
+**Make sure `~/.local/bin` is on your PATH.** If `kimu` isn't found after install:
 
 ```bash
 uv tool update-shell      # then restart your shell
@@ -64,17 +82,16 @@ uv tool uninstall kimu
 ## Run
 
 ```bash
-kimu                 # landing screen — pick a folder in the browser
+kimu                 # opens kimu without a folder
 kimu .               # serve the current directory
 kimu ./docs          # serve a specific folder
 kimu . -p 9000       # custom port (default 8765)
 kimu --no-browser .  # don't auto-open a browser
 ```
 
-`kimu` starts the server and opens it in your browser. With no folder it shows
-a landing screen — click **Select folder…** to pick one with your OS's native
-file dialog. Once a folder is open, the toolbar's folder button switches to
-another. No separate app window, no dependencies.
+`kimu` starts the server and opens it in your browser.
+
+If no folder is selected, it shows a landing screen where you can click **Select folder…** to pick one. Once a folder is open, the toolbar's folder button switches to another.
 
 ### Without installing
 
