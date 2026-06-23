@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continuous Radial Transition</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="transitionCanvas"></canvas>
+
+<script>
+// --- Configuration ---
+const imageSources = [
+    'Alucard.png', 
+    'Ayu Dark.png', 
+    'Ayu Light.png', 
+    'Dark.png', 
+    'Dracula.png', 
+    'Light.png', 
+    'Synthwave.png',
+];
+const config = {
+    m: 3,             // Number of wiping lines
+    speed: 0.015,     // Rotation speed per frame
+};
+
+// --- State Management ---
+const canvas = document.getElementById('transitionCanvas');
+const ctx = canvas.getContext('2d');
+const images = [];
+let loadedCount = 0;
+let currentAngle = 0; // This will grow indefinitely to track absolute progress
+
+imageSources.forEach((src) => {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => {
+        loadedCount++;
+        if (loadedCount === imageSources.length) {
+            init();
+        }
+    };
+    images.push(img);
+});
+
+function init() {
+    canvas.width = images[0].naturalWidth;
+    canvas.height = images[0].naturalHeight;
+    requestAnimationFrame(animate);
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const radius = Math.sqrt(cx * cx + cy * cy);
+    const numImages = images.length;
+    const spacing = (Math.PI * 2) / config.m;
+
+    currentAngle += config.speed;
+
+    // 1. Collect all boundary lines mapped to the 0-2PI canvas space
+    let boundaries = [0, Math.PI * 2]; // Include the native wrap points to prevent canvas drawing glitches
+    for (let i = 0; i < config.m; i++) {
+        let lineAngle = (currentAngle - (i * spacing)) % (Math.PI * 2);
+        if (lineAngle < 0) lineAngle += Math.PI * 2;
+        boundaries.push(lineAngle);
+    }
+    
+    // Sort boundaries to process consecutive slices
+    boundaries.sort((a, b) => a - b);
+
+    // 2. Draw each dynamically sized arc
+    for (let i = 0; i < boundaries.length - 1; i++) {
+        let startArc = boundaries[i];
+        let endArc = boundaries[i + 1];
+        
+        // Skip empty slices created by exact overlaps
+        if (endArc - startArc < 0.0001) continue;
+        
+        // Find the physical midpoint of this specific arc
+        let midArc = (startArc + endArc) / 2;
+        
+        // 3. The Core Fix: Calculate the absolute "depth layer" of this arc 
+        // based on how many sweeps have passed its physical location
+        let k = Math.floor((currentAngle - midArc) / spacing);
+        
+        // Map the infinite spiral depth to our looping array of images
+        let imgIndex = ((k % numImages) + numImages) % numImages;
+
+        // 4. Draw the precise cutout
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radius, startArc, endArc);
+        ctx.closePath();
+        ctx.clip();
+        
+        ctx.drawImage(images[imgIndex], 0, 0);
+        ctx.restore();
+    }
+
+    requestAnimationFrame(animate);
+}
+</script>
+
+</body>
+</html>
