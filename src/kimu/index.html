@@ -6,6 +6,11 @@
 <title>Kimu</title>
 <link rel="icon" type="image/svg+xml" href="/static/logo.svg">
 <script src="/static/vendor/marked.min.js"></script>
+<script src="/static/vendor/highlight.min.js"></script>
+<link rel="stylesheet" href="/static/vendor/highlight-vars.css">
+<link rel="stylesheet" href="/static/vendor/katex/katex.min.css">
+<script src="/static/vendor/katex/katex.min.js"></script>
+<script src="/static/vendor/katex/contrib/auto-render.min.js"></script>
 <link rel="stylesheet" href="/static/fonts/fonts.css">
 <link rel="stylesheet" href="/static/styles.css">
 </head>
@@ -31,6 +36,10 @@
       <button id="reload-btn" title="Reload document" disabled>
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
       </button>
+      <label id="watch-toggle" title="Auto-reload documents when their files change">
+        <input type="checkbox" id="watch-check">
+        <span>Auto Reload</span>
+      </label>
       <button id="search-btn" title="Search (/)">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
       </button>

@@ -33,6 +33,10 @@
   --bq-border:  #d1d5db;
   --td-hover:   rgba(99,102,241,.07);
   --glow:       none;
+  /* Syntax-highlight token palette (light default) */
+  --hl-keyword: #a626a4; --hl-string: #50a14f; --hl-number: #986801;
+  --hl-comment: #a0a1a7; --hl-func: #4078f2; --hl-title: #c18401;
+  --hl-attr: #986801; --hl-var: #e45649; --hl-tag: #e45649; --hl-meta: #4078f2;
 }
 
 /* ── Themes ─────────────────────────────────────────────────────────
@@ -50,6 +54,9 @@
   --row-even: #1c1c2e; --th-bg: #1e1e2e;
   --link: #818cf8; --link-hover: #a5b0ff; --bq-border: #3a3a5a;
   --td-hover: rgba(99,102,241,.12);
+  --hl-keyword: #bb9af7; --hl-string: #9ece6a; --hl-number: #ff9e64;
+  --hl-comment: #565f89; --hl-func: #7aa2f7; --hl-title: #7dcfff;
+  --hl-attr: #73daca; --hl-var: #f7768e; --hl-tag: #f7768e; --hl-meta: #2ac3de;
 }
 
 /* Ayu Light */
@@ -64,6 +71,9 @@
   --row-even: #f7f8f9; --th-bg: #f0f1f2;
   --link: #399ee6; --link-hover: #1f8ad6; --bq-border: #ffcc99;
   --td-hover: rgba(255,153,64,.10);
+  --hl-keyword: #fa8d3e; --hl-string: #86b300; --hl-number: #a37acc;
+  --hl-comment: #abb0b6; --hl-func: #f2ae49; --hl-title: #399ee6;
+  --hl-attr: #f2ae49; --hl-var: #f07171; --hl-tag: #55b4d4; --hl-meta: #e6ba7e;
 }
 
 /* Ayu Dark */
@@ -78,6 +88,9 @@
   --row-even: #11151c; --th-bg: #131721;
   --link: #59c2ff; --link-hover: #8ad2ff; --bq-border: #3d4350;
   --td-hover: rgba(255,180,84,.12);
+  --hl-keyword: #ff8f40; --hl-string: #aad94c; --hl-number: #d2a6ff;
+  --hl-comment: #5c6773; --hl-func: #ffb454; --hl-title: #59c2ff;
+  --hl-attr: #ffb454; --hl-var: #f07178; --hl-tag: #39bae6; --hl-meta: #e6b673;
 }
 
 /* Alucard — Dracula's official light variant */
@@ -92,6 +105,9 @@
   --row-even: #f9f4df; --th-bg: #f0ead0;
   --link: #036a96; --link-hover: #024f70; --bq-border: #cbb98f;
   --td-hover: rgba(100,74,201,.10);
+  --hl-keyword: #a3144d; --hl-string: #14710a; --hl-number: #644ac9;
+  --hl-comment: #9b9477; --hl-func: #635900; --hl-title: #635900;
+  --hl-attr: #846e15; --hl-var: #cf563a; --hl-tag: #a3144d; --hl-meta: #036a96;
 }
 
 /* Dracula */
@@ -106,6 +122,9 @@
   --row-even: #2d2f3d; --th-bg: #343746;
   --link: #8be9fd; --link-hover: #a4effd; --bq-border: #6272a4;
   --td-hover: rgba(189,147,249,.15);
+  --hl-keyword: #ff79c6; --hl-string: #f1fa8c; --hl-number: #bd93f9;
+  --hl-comment: #6272a4; --hl-func: #50fa7b; --hl-title: #50fa7b;
+  --hl-attr: #50fa7b; --hl-var: #ffb86c; --hl-tag: #ff79c6; --hl-meta: #8be9fd;
 }
 
 /* Synthwave — the glowy one */
@@ -121,6 +140,9 @@
   --link: #36f9f6; --link-hover: #72fdfb; --bq-border: #b893ce;
   --td-hover: rgba(255,126,219,.15);
   --glow: 0 0 8px rgba(255,126,219,.55);
+  --hl-keyword: #fede5d; --hl-string: #ff8b39; --hl-number: #f97e72;
+  --hl-comment: #848bbd; --hl-func: #36f9f6; --hl-title: #36f9f6;
+  --hl-attr: #fede5d; --hl-var: #ff7edb; --hl-tag: #72f1b8; --hl-meta: #ff7edb;
 }
 /* Synthwave glow accents */
 [data-theme="synthwave"] #doc h1,
@@ -319,6 +341,23 @@ body.resizing #sidebar { transition: none; }
   flex-shrink: 0;
 }
 #saved.on { opacity: 1; }
+
+/* Watch (autoreload) toggle */
+#watch-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 6px;
+  border-radius: 7px;
+  transition: background .15s, color .15s;
+}
+#watch-toggle:hover { background: var(--border); color: var(--text); }
+#watch-toggle input { accent-color: var(--primary); cursor: pointer; margin: 0; }
 
 /* ── Tab strip ──────────────────────────────────────────────────── */
 #tabs {
@@ -560,6 +599,14 @@ body.resizing #sidebar { transition: none; }
 .copy-btn.copied { background: var(--green); color: #fff; opacity: 1; }
 #doc pre code { background: none; padding: 0; font-size: .83em; }
 
+/* KaTeX display equations: allow horizontal scroll for wide formulas */
+#doc .katex-display { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+
+/* Mermaid diagrams */
+#doc .mermaid-diagram { display: flex; justify-content: center; margin: 1rem 0; }
+#doc .mermaid-diagram svg { max-width: 100%; height: auto; }
+#doc .mermaid-error { color: var(--adm-color, #e5534b); white-space: pre-wrap; }
+
 /* Tables */
 #doc table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: .9em; }
 #doc th { background: var(--th-bg); font-weight: 600; padding: 8px 12px; text-align: left; border: 1px solid var(--border); }
@@ -635,14 +682,14 @@ body.resizing #sidebar { transition: none; }
   user-select: none;
   transition: background .1s, color .1s;
   color: var(--sb-file);
-  padding: 3.5px 8px 3.5px 26px;
+  padding: 3.5px 8px 3.5px calc(26px + var(--toc-indent, 0px));
 }
 .toc-item:hover { background: var(--sb-hover); color: var(--sb-text); }
 .toc-item.active { color: var(--primary); font-weight: 600; }
 
-.toc-item.h1 { padding-left: 26px; font-weight: 600; color: var(--sb-text); }
-.toc-item.h2 { padding-left: 38px; }
-.toc-item.h3 { padding-left: 50px; font-size: 12px; }
+.toc-item.h1 { padding-left: calc(26px + var(--toc-indent, 0px)); font-weight: 600; color: var(--sb-text); }
+.toc-item.h2 { padding-left: calc(38px + var(--toc-indent, 0px)); }
+.toc-item.h3 { padding-left: calc(50px + var(--toc-indent, 0px)); font-size: 12px; }
 
 .toc-arrow { font-size: 7px; flex-shrink: 0; transition: transform .2s; opacity: .45; }
 .toc-item.toc-open .toc-arrow { transform: rotate(90deg); }

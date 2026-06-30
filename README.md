@@ -39,10 +39,22 @@ Kimu serves a folder of `.md` files as a fast, single-page reader and scoped edi
 ![Themes](imgs/themes.gif)
 
 And more!
+- **Syntax highlighting** in code blocks for major languages.
+- **Mermaid diagrams**: fenced ` ```mermaid ` blocks render as diagrams.
+- **LaTeX math** via KaTeX: `$…$` inline and `$$…$$` block equations.
+- **Auto-reload**: Kimu watches for file changes and reloads automatically.
 - **Full-text search** across all docs (`/` to open)
 - **Admonitions**: Add admonitions with `> [!NOTE]` / `[!TIP]` / `[!WARNING]`
 - **Easy to install**, no dependencies.
 - **Fully offline**: JS and fonts are bundled, no CDN or internet needed
+
+> [!NOTE]
+> **Auto Reload and ad-blockers:** Auto Reload works by polling a local endpoint
+> (`/api/stat`) for file changes. Some ad-blockers / privacy extensions
+> (e.g. uBlock Origin) may block this request, which silently disables
+> auto-reloading. If Auto Reload isn't picking up changes, allow-list
+> `localhost` (or whichever host you run Kimu on) in your blocker. Manual reload
+> always works regardless.
 
 ## Install
 

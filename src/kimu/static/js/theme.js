@@ -41,4 +41,5 @@ function apply(id) {
   localStorage.setItem('docs-theme', id);
   document.querySelectorAll('.theme-opt').forEach(o =>
     o.classList.toggle('selected', o.dataset.theme === id));
+  document.dispatchEvent(new CustomEvent('kimu:themechange', { detail: { theme: id } }));
 }

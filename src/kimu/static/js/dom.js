@@ -18,3 +18,14 @@ export function debounce(fn, ms) {
 export function escapeHtml(s) {
   return s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
 }
+
+// Flash a transient toolbar status message (the green #saved span). Used for
+// both "Saved ✓" (on edit) and "Reloaded!" (on reload).
+export function flashStatus(text) {
+  const el = $('saved');
+  if (!el) return;
+  el.textContent = text;
+  el.classList.add('on');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('on'), 1800);
+}

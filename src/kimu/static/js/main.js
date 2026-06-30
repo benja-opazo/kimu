@@ -4,6 +4,8 @@ import { initSidebar } from './sidebar.js';
 import { initSearch } from './search.js';
 import { initRouter } from './router.js';
 import { initBuffers } from './buffers.js';
+import { initWatch } from './watch.js';
+import { initMermaidTheming } from './mermaid.js';
 import { initConfig } from './config.js';
 import { showLanding, wireFolderButton } from './folder.js';
 import { initQuit } from './quit.js';
@@ -23,6 +25,8 @@ import { initQuit } from './quit.js';
   const paths = await initSidebar();
   initSearch();
   initBuffers();                 // pane + tab strip, before any navigation
+  initWatch();                   // autoreload toggle (reads state.buffers lazily)
+  initMermaidTheming();          // re-render diagrams on theme change
   const def = paths.includes('README.md') ? 'README.md' : paths[0];
   initRouter(def);
 })();

@@ -52,6 +52,11 @@ export function buildToc(root, scrollEl) {
   const container = document.createElement('div');
   container.className = 'toc-container';
 
+  // Indent the TOC to match the active file's nesting depth in the tree, so a
+  // nested file's TOC lines up under its (already-indented) file name.
+  const depth = (activeEl.dataset.path || '').split('/').length - 1;
+  container.style.setProperty('--toc-indent', (depth * 16) + 'px');
+
   const tocById = {};
   const currentChildrenEl = { 0: container };
 

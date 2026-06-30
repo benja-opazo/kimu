@@ -1,7 +1,7 @@
-import { $ } from './dom.js';
+import { $, flashStatus } from './dom.js';
 import { state, getBuffer, navigate } from './store.js';
 import { getFile } from './api.js';
-import { createPane, renderInto } from './pane.js';
+import { createPane, renderInto, captureScrollAnchor } from './pane.js';
 import { setActive, expandAncestors } from './sidebar.js';
 import { clearToc, scrollToId } from './toc.js';
 
@@ -62,9 +62,21 @@ export async function reloadActive() {
   if (!path) return;
   const buf = getBuffer(path);
   if (!buf) return;
+  const anchor = captureScrollAnchor(pane);    // capture position before content changes
+  buf.scrollTop = pane.scrollEl.scrollTop;      // pixel fallback for restore
   buf.raw = await getFile(path);
-  buf.scrollTop = 0;
-  renderInto(pane, buf, {});
+  renderInto(pane, buf, { scrollAnchor: anchor });
+  flashStatus('Reloaded!');
+}
+
+// Reload a buffer's content from disk. The active pane re-renders in place
+// (preserving scroll); a background tab just refreshes its raw so the next
+// activation shows fresh content. Used by the watch/autoreload feature.
+export async function reloadBuffer(path) {
+  const buf = getBuffer(path);
+  if (!buf) return;
+  if (path === state.activePath) { await reloadActive(); return; }
+  buf.raw = await getFile(path);
 }
 
 export function closeBuffer(path) {

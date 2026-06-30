@@ -9,6 +9,7 @@ Serves the SPA shell (index.html), static assets (static/), doc-folder media
   GET  /api/config            -> {"name": "Kimu", "folder": <basename>}
   GET  /api/files             -> list of doc paths (relative to folder)
   GET  /api/file?path=...     -> raw markdown
+  GET  /api/stat?path=...     -> {path: mtime|null} (repeat path= for many)
   POST /api/file?path=...     -> overwrite markdown
   GET  /api/search?q=...      -> [{path, line, text}] case-insensitive content matches
   POST /api/quit              -> shut the server down (process exits)
@@ -196,11 +197,18 @@ class Handler(BaseHTTPRequestHandler):
         elif u.path == "/api/search":
             q = parse_qs(u.query).get("q", [""])[0]
             self._json(search_docs(q))
+        elif u.path == "/api/stat":
+            rels = parse_qs(u.query).get("path", [])
+            out = {}
+            for rel in rels:
+                p = safe(rel)
+                out[rel] = p.stat().st_mtime if p else None
+            self._json(out)
         elif u.path == "/api/file":
             rel = parse_qs(u.query).get("path", [""])[0]
             p = safe(rel)
             if p:
-                self._file(p, "text/plain; charset=utf-8")
+                self._file(p, "text/plain; charset=utf-8", no_cache=True)
             else:
                 self.send_error(404)
         else:
@@ -233,11 +241,13 @@ class Handler(BaseHTTPRequestHandler):
         p.write_text(self.rfile.read(n).decode("utf-8"), encoding="utf-8")
         self._json({"ok": True})
 
-    def _file(self, p: Path, ct: str):
+    def _file(self, p: Path, ct: str, no_cache: bool = False):
         data = p.read_bytes()
         self.send_response(200)
         self.send_header("Content-Type", ct)
         self.send_header("Content-Length", len(data))
+        if no_cache:
+            self.send_header("Cache-Control", "no-store")
         self.end_headers()
         self.wfile.write(data)
 
@@ -246,6 +256,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-Type", CONTENT_TYPES[".json"])
         self.send_header("Content-Length", len(data))
+        self.send_header("Cache-Control", "no-store")   # dynamic API: never cache
         self.end_headers()
         self.wfile.write(data)
 

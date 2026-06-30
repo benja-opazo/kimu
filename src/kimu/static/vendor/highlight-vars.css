@@ -1,0 +1,51 @@
+/* highlight.js token colors mapped to Kimu CSS variables, so syntax colors
+   follow the active theme. Token palettes (--hl-*) are defined per theme in
+   styles.css. Unmapped tokens fall back to the surrounding code text color. */
+
+.hljs { color: var(--code-text); background: transparent; }
+
+.hljs-keyword,
+.hljs-built_in,
+.hljs-type,
+.hljs-selector-tag           { color: var(--hl-keyword); }
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition               { color: var(--hl-string); }
+
+.hljs-number,
+.hljs-literal                { color: var(--hl-number); }
+
+.hljs-comment,
+.hljs-quote                  { color: var(--hl-comment); font-style: italic; }
+
+.hljs-function .hljs-title,
+.hljs-title.function_        { color: var(--hl-func); }
+
+.hljs-title,
+.hljs-section,
+.hljs-class .hljs-title,
+.hljs-title.class_           { color: var(--hl-title); }
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-property,
+.hljs-selector-attr,
+.hljs-selector-pseudo        { color: var(--hl-attr); }
+
+.hljs-variable,
+.hljs-template-variable,
+.hljs-deletion               { color: var(--hl-var); }
+
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class         { color: var(--hl-tag); }
+
+.hljs-meta,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link                   { color: var(--hl-meta); }
+
+.hljs-emphasis { font-style: italic; }
+.hljs-strong   { font-weight: bold; }

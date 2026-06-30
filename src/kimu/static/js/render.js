@@ -1,8 +1,9 @@
-import { $, slugify } from './dom.js';
+import { slugify, flashStatus } from './dom.js';
 import { navigate } from './store.js';
 import { saveFile } from './api.js';
 import { scrollToId } from './toc.js';
 import { admonitionIcons } from './icons.js';
+import { renderMermaid } from './mermaid.js';
 
 const ADMONITION_LABELS = {
   note: 'Note', tip: 'Tip', important: 'Important',
@@ -26,7 +27,10 @@ export function renderDoc(buf, root) {
   addHeadingAnchors(buf, root);
   wireCheckboxes(buf, root);
   makeCollapsible(root);
+  renderMermaid(root);
+  highlightCode(root);
   addCopyButtons(root);
+  renderMath(root);
   mapTablesToLines(buf, root);
   makeTablesEditable(buf, root);
   wireInternalLinks(buf, root);
@@ -35,10 +39,9 @@ export function renderDoc(buf, root) {
 
 async function save(buf) {
   await saveFile(buf.path, buf.raw);
-  const el = $('saved');
-  el.classList.add('on');
-  clearTimeout(el._t);
-  el._t = setTimeout(() => el.classList.remove('on'), 1800);
+  // Tell the watcher this change came from us, so autoreload doesn't echo it.
+  document.dispatchEvent(new CustomEvent('kimu:localsave', { detail: { path: buf.path } }));
+  flashStatus('Saved ✓');
 }
 
 // ── Headings: stable ids + deep-link anchors ────────────────────────────────
@@ -125,6 +128,38 @@ function makeCollapsible(root) {
         el = el.nextElementSibling;
       }
     });
+  });
+}
+
+// ── Syntax highlighting ──────────────────────────────────────────────────────
+
+// Highlight fenced code blocks with highlight.js. Blocks tagged with a known
+// `language-xxx` are highlighted as that language; untagged blocks fall back to
+// auto-detection. Mermaid blocks are left for the mermaid pass.
+function highlightCode(root) {
+  if (typeof hljs === 'undefined') return;
+  root.querySelectorAll('pre > code').forEach(code => {
+    const cls = code.className || '';
+    if (/\blanguage-mermaid\b/.test(cls)) return;
+    const m = cls.match(/\blanguage-([\w+-]+)\b/);
+    if (m && !hljs.getLanguage(m[1])) return;   // unknown explicit lang: leave plain
+    hljs.highlightElement(code);                // auto-detects when no language class
+  });
+}
+
+// ── Math (LaTeX via KaTeX) ───────────────────────────────────────────────────
+
+// Render $…$ (inline) and $$…$$ (display) math. Runs after highlightCode so it
+// never scans code blocks; `ignoredTags` double-guards pre/code.
+function renderMath(root) {
+  if (typeof renderMathInElement === 'undefined') return;
+  renderMathInElement(root, {
+    delimiters: [
+      { left: '$$', right: '$$', display: true },
+      { left: '$',  right: '$',  display: false },
+    ],
+    ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+    throwOnError: false,
   });
 }
 
